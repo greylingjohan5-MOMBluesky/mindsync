@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MindSync</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7f6;
+      color: #333;
+      max-width: 720px;
+      margin: auto;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    h2 {
+      font-weight: normal;
+      text-align: center;
+      color: #666;
+      margin-top: 0;
+    }
+    .box {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 16px;
+      margin: 6px 4px 0 0;
+      border: none;
+      border-radius: 6px;
+      background: #4a7c59;
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    button.secondary {
+      background: #888;
+    }
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .small {
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>MindSync</h1>
+  <h2>A quiet space to speak, write, and reflect.</h2>
+
+  <div class="box">
+    <p>
+      Welcome.<br><br>
+      This space is for slowing down your thoughts.
+      You can speak or write — there is no right way to begin.<br><br>
+      Nothing you share is stored.
+    </p>
+  </div>
+
+  <div class="box">
+    <p><strong>How would you like to begin?</strong></p>
+    <button onclick="showWrite()">Start Writing</button>
+    <button onclick="showSpeak()">Start Speaking</button>
+  </div>
+
+  <div class="box" id="writeBox" style="display:none;">
+    <p><strong>Write</strong></p>
+    <textarea placeholder="Write whatever feels important right now."></textarea>
+  </div>
+
+  <div class="box" id="speakBox" style="display:none;">
+  <p><strong>Speak</strong></p>
+  <p>Press start and speak freely.</p>
+
+  <button onclick="startSpeech()">Start Speaking</button>
+  <button class="secondary" onclick="stopSpeech()">Stop Speaking</button>
+
+  <textarea id="speechText" placeholder="Your spoken words will appear here..."></textarea>
+</div>
+
+   <div class="box" id="reflectionBox">
+  <p><strong>Take a moment to reflect</strong></p>
+
+  <p>What feels most important in what you just shared?</p>
+  <textarea placeholder="Write a few words..."></textarea>
+
+  <p>How does your body feel right now?</p>
+  <textarea placeholder="Calm, tense, tired, light, heavy..."></textarea>
+
+  <p>Is there one thought you would like to soften or release?</p>
+  <textarea placeholder="You can rewrite it more kindly here."></textarea>
+</div>
+ <div class="box">
+  <p><strong>Looking for more guidance?</strong></p>
+  <p>
+    MindSync is a quiet starting point.
+    If you would like structured support, you can continue with a guided stress relief workbook.
+  </p>
+  <button onclick="window.open('https://payhip.com/mombluesky', '_blank')">
+
+    View Stress Relief Workbooks
+  </button>
+</div>
+
+
+  
+
+  
+    
+  
+
+  <p class="small">
+    MindSync is a self-reflection tool and not a substitute for medical or mental health advice.
+  </p>
+
+  <script>
+  function showWrite() {
+    document.getElementById("writeBox").style.display = "block";
+    document.getElementById("speakBox").style.display = "none";
+  }
+
+  function showSpeak() {
+    document.getElementById("speakBox").style.display = "block";
+    document.getElementById("writeBox").style.display = "none";
+  }
+
+  let recognition;
+  let speechOutput = "";
+
+  function startSpeech() {
+    speechOutput = "";
+    document.getElementById("speechText").value = "";
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onresult = function (event) {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          speechOutput += event.results[i][0].transcript + " ";
+        } else {
+          interim += event.results[i][0].transcript;
+        }
+      }
+      document.getElementById("speechText").value = speechOutput + interim;
+    };
+
+    recognition.start();
+  }
+
+  function stopSpeech() {
+    if (recognition) {
+      recognition.stop();
+    }
+  }
+</script>
+
+    
+  
+ 
+    
+    
+    
+      
+  
+
+</body>
+</html>
